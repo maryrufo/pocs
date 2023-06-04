@@ -1,0 +1,11 @@
+version: '3.2'
+ 
+services:
+ filebeat:
+   build:
+     context: .
+   command: ["--strict.perms=false"]
+   user: root
+   volumes:
+     - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+     - ~/Downloads/elk-logs/:/usr/share/filebeat/elk-logs/:ro
