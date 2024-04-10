@@ -1,0 +1,16 @@
+version: '3'
+services:
+
+  sftp:
+    image: atmoz/sftp
+    ports:
+      - "2222:22"
+    command: sftp_user::1001::upload
+    #for basic (password authentication)
+    #command: sftp_user:password:1001::upload
+    volumes:
+      - ./ssh/ssh_host_ed25519_key.pub:/home/sftp_user/.ssh/keys/ssh_host_ed25519_key.pub:ro
+      - ./ssh/ssh_host_rsa_key.pub:/home/sftp_user/.ssh/keys/ssh_host_rsa_key.pub:ro
+      #provide your own SSH host key to prevent regenerate of ssh keys during create of container
+      - ./ssh/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key
+      - ./ssh/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key
