@@ -1,5 +1,7 @@
 # SFTP Server
 
+Demonstrate client login to a sftp server via basic auth and ssh keys
+
 ## Setup
 
 1. Do clean up. Update `~/.ssh/known_hosts` for unused existing keys.
