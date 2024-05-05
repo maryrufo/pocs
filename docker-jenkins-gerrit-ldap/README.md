@@ -65,22 +65,30 @@
 
 7. Add ssh key to gerrit.
     - Generate ssh
+        ```
         $ ssh-keygen -t ed25519 -C "your_email@example.com"
+        ```
     - Change permission
+        ```
         $ chmod 700 ssh
         $ chmod 600 ssh/id_ed25519
+        ```
     - On Gerrit > Settings > SSH keys > Add new ssh key > Paste public key. Save.
 
 8. Add new repository.
     - Create a sample maven project
+        ```
         $ mvn archetype:generate -DgroupId=com.sample.app -DartifactId=sample-app -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false
+        ```
     - Browse > Repositories > Create New > sample-app, master
     - Clone repository on local (with commit message hook)
+        ```
         $ git clone "ssh://admin@localhost:29418/sample-app" && (cd "sample-app" && mkdir -p `git rev-parse --git-dir`/hooks/ && curl -Lo `git rev-parse --git-dir`/hooks/commit-msg http://localhost:8081/tools/hooks/commit-msg && chmod +x `git rev-parse --git-dir`/hooks/commit-msg)
         $ cd sample-app
         $ git add .
         $ git commit -m "initial commmit"
         $ git push origin HEAD:refs/for/master
+        ```
     - Merge changes.
 
 9. On jenkins, run build for sample-app job.
@@ -88,12 +96,14 @@
 # Docker networks
 
 1. Useful commands
+    ```
     $ ip address ls
     $ docker network ls
     $ docker network inspect <network_name>
     $ ns lookup medium.com
     $ docker network inspect host
     $ hostname -I | awk '{print $1}'
+    ```
 
 2. Sample compose file.
 ```
