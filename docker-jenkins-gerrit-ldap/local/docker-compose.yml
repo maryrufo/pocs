@@ -1,0 +1,57 @@
+services:
+  openldap:
+    image: osixia/openldap:1.3.0
+    container_name: openldap
+    command: --copy-service # seemingly required to load directory.ldif
+    ports:
+      - 389:389
+      - 636:636
+    environment:
+      - LDAP_ADMIN_PASSWORD=${LDAP_PASSWORD:-password}
+      - LDAP_READONLY_USER=true
+      - LDAP_READONLY_USER_PASSWORD=${LDAP_PASSWORD:-password}
+    volumes:
+      - ./ldap/directory.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/directory.ldif
+
+  openldap-admin:
+    image: osixia/phpldapadmin:0.9.0
+    container_name: openldap-admin
+    ports:
+      - 6443:443
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+
+  jenkins:
+    build:
+      context: .
+    container_name: jenkins
+    user: 1000:${DOCKER_GID:-998}
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - ./casc_configs:/var/jenkins_conf
+      - ./jobs:/usr/share/jenkins/ref/jobs
+      - ./ssh:/var/jenkins_home/.ssh
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - CASC_JENKINS_CONFIG=/var/jenkins_conf
+      - LDAP_SERVER=${LDAP_SERVER:-ldap://172.17.0.1:389}
+      - LDAP_PASSWORD=${LDAP_PASSWORD:-password}
+    ports:
+      - "8080:8080"
+
+  gerrit:
+    image: gerritcodereview/gerrit
+    container_name: gerrit
+    volumes:
+      - gerrit_git:/var/gerrit/git
+      - gerrit_index:/var/gerrit/index
+      - gerrit_cache:/var/gerrit/cache
+    ports:
+      - "29418:29418"
+      - "8081:8080"
+
+volumes:
+  jenkins_home:
+  gerrit_git:
+  gerrit_index:
+  gerrit_cache:

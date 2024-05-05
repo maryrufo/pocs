@@ -1,0 +1,16 @@
+# Docker Group ID
+#   $ groups
+#   $ members docker
+#   $ grep 'docker' /etc/group
+#
+#   $ docker exec -it jenkins bash
+#     $ id
+DOCKER_GID=998
+
+#   $ hostname -I
+LDAP_SERVER=ldap://172.17.0.1:389
+
+LDAP_PASSWORD=password
+
+#   $ hostname -I
+GIT_URL=ssh://admin@192.168.254.107:29418/sample-app
